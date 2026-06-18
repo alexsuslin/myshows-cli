@@ -15,9 +15,10 @@ The primary consumer is an external agent running on a VPS, such as Hermes or Op
 
 - Human-facing project overview: `README.md`
 - Agent-facing CLI contract: `docs/agent-cli.md`
+- Delivery workflow: `CONTRIBUTING.md`
 - Historical skill notes / lightweight summary: `docs/skill.md`
 
-When these documents disagree, treat `docs/agent-cli.md` as the canonical agent contract and update the others to match.
+When these documents disagree, treat `docs/agent-cli.md` as the canonical CLI contract and `CONTRIBUTING.md` as the canonical delivery workflow, then update the others to match.
 
 ## Architecture guidelines
 
@@ -57,6 +58,7 @@ When adding or changing user-facing functionality, review and update these files
 - `README.md`
 - `CHANGELOG.md` for release-worthy user-visible changes
 - `docs/agent-cli.md`
+- `CONTRIBUTING.md`
 - `docs/skill.md`
 - `AGENTS.md` if project conventions or maintenance rules changed
 

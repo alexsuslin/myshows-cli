@@ -21,6 +21,7 @@ The main use case is a remote agent such as Hermes or OpenClaw running on Ubuntu
 
 Project guidance for maintainers lives in [AGENTS.md](AGENTS.md).
 Canonical agent usage documentation lives in [docs/agent-cli.md](docs/agent-cli.md).
+Contributor and release workflow lives in [CONTRIBUTING.md](CONTRIBUTING.md).
 Project release history lives in [CHANGELOG.md](CHANGELOG.md).
 
 ## Current commands
