@@ -55,6 +55,7 @@ Keep responsibilities narrow. Avoid adding heavy abstractions until there is a c
 When adding or changing user-facing functionality, review and update these files as needed in the same change:
 
 - `README.md`
+- `CHANGELOG.md` for release-worthy user-visible changes
 - `docs/agent-cli.md`
 - `docs/skill.md`
 - `AGENTS.md` if project conventions or maintenance rules changed
@@ -79,4 +80,5 @@ Before considering work complete:
 - run lint
 - verify package build
 - update docs for any CLI/API contract changes
+- update `CHANGELOG.md` and GitHub Release notes when preparing a release
 - avoid committing secrets or `.env`
