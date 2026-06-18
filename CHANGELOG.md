@@ -4,6 +4,10 @@ All notable changes to this project should be documented in this file.
 
 ## Unreleased
 
+## v0.1.1 - 2026-06-18
+
+Configuration quality-of-life release for agent and VPS usage.
+
 ### Added
 
 - Added XDG-style config loading from `$XDG_CONFIG_HOME/myshows-cli/.env`.
