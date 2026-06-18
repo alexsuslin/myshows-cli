@@ -69,6 +69,8 @@ At minimum, every new CLI command or flag should be reflected in:
 ## Operational notes
 
 - The CLI supports `.env` with `email` and `password`.
+- The CLI also supports XDG-style config at `$XDG_CONFIG_HOME/myshows-cli/.env` and `~/.config/myshows-cli/.env`.
+- `MYSHOWS_CLI_EMAIL` and `MYSHOWS_CLI_PASSWORD` are valid aliases for login credentials.
 - If explicit `MYSHOWS_CLIENT_ID` and `MYSHOWS_CLIENT_SECRET` are missing, the code falls back to `apidoc/apidoc`.
 - MyShows may show short write-to-read delays after mutation calls. Treat this as an API consistency nuance, not necessarily a local bug.
 

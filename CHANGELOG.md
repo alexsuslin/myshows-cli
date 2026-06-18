@@ -2,6 +2,14 @@
 
 All notable changes to this project should be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Added XDG-style config loading from `$XDG_CONFIG_HOME/myshows-cli/.env`.
+- Added fallback config loading from `~/.config/myshows-cli/.env`.
+- Added `MYSHOWS_CLI_EMAIL` and `MYSHOWS_CLI_PASSWORD` as aliases for login credentials.
+
 ## v0.1.0 - 2026-06-18
 
 First public release of `myshows-cli`.

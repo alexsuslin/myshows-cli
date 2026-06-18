@@ -42,16 +42,33 @@ export MYSHOWS_CLIENT_ID="..."
 export MYSHOWS_CLIENT_SECRET="..."
 export MYSHOWS_USERNAME="..."
 export MYSHOWS_PASSWORD="..."
+export MYSHOWS_CLI_EMAIL="..."
+export MYSHOWS_CLI_PASSWORD="..."
 export MYSHOWS_LANGUAGE="en"
 ```
 
 `MYSHOWS_LANGUAGE` is optional and defaults to `en`.
 
-The CLI also supports a local `.env` file. The smallest working variant is:
+The CLI supports configuration from:
+
+1. environment variables
+2. `./.env` in the current working directory
+3. `~/.config/myshows-cli/.env` or `$XDG_CONFIG_HOME/myshows-cli/.env`
+
+Later items act as fallback sources. Environment variables have the highest priority, and `./.env` overrides the XDG-style config file.
+
+The smallest working variant is:
 
 ```dotenv
 email=your-login-or-email
 password=your-password
+```
+
+You can also use the more explicit aliases:
+
+```dotenv
+MYSHOWS_CLI_EMAIL=your-login-or-email
+MYSHOWS_CLI_PASSWORD=your-password
 ```
 
 If `MYSHOWS_CLIENT_ID` and `MYSHOWS_CLIENT_SECRET` are omitted, the CLI falls back to the public API docs sandbox app credentials `apidoc/apidoc`. If you later request your own OAuth app from `api@myshows.me`, those explicit values will override the default.

@@ -25,12 +25,20 @@ class Settings:
     @classmethod
     def from_env(cls) -> "Settings":
         """Load settings from environment variables."""
-        env_file_values = _load_dotenv(Path.cwd() / ".env")
+        env_file_values = _load_config_values()
         values = {
             "client_id": _first_value("MYSHOWS_CLIENT_ID", env_file_values) or DEFAULT_CLIENT_ID,
             "client_secret": _first_value("MYSHOWS_CLIENT_SECRET", env_file_values) or DEFAULT_CLIENT_SECRET,
-            "username": _first_value("MYSHOWS_USERNAME", env_file_values, aliases=("email", "EMAIL")),
-            "password": _first_value("MYSHOWS_PASSWORD", env_file_values, aliases=("password", "PASSWORD")),
+            "username": _first_value(
+                "MYSHOWS_USERNAME",
+                env_file_values,
+                aliases=("MYSHOWS_CLI_EMAIL", "email", "EMAIL"),
+            ),
+            "password": _first_value(
+                "MYSHOWS_PASSWORD",
+                env_file_values,
+                aliases=("MYSHOWS_CLI_PASSWORD", "password", "PASSWORD"),
+            ),
             "language": _first_value("MYSHOWS_LANGUAGE", env_file_values) or "en",
         }
         missing = [name.upper() for name, value in values.items() if name != "language" and not value]
@@ -38,6 +46,28 @@ class Settings:
             names = ", ".join(f"MYSHOWS_{name}" for name in missing)
             raise ConfigurationError(f"Missing required environment variables: {names}")
         return cls(**values)
+
+
+def _load_config_values() -> dict[str, str]:
+    values: dict[str, str] = {}
+    for path in _config_paths():
+        values.update(_load_dotenv(path))
+    return values
+
+
+def _config_paths() -> list[Path]:
+    paths: list[Path] = []
+
+    xdg_config_home = os.getenv("XDG_CONFIG_HOME", "").strip()
+    if xdg_config_home:
+        paths.append(Path(xdg_config_home) / "myshows-cli" / ".env")
+    else:
+        home = os.getenv("HOME", "").strip()
+        if home:
+            paths.append(Path(home) / ".config" / "myshows-cli" / ".env")
+
+    paths.append(Path.cwd() / ".env")
+    return paths
 
 
 def _first_value(primary: str, dotenv_values: dict[str, str], aliases: tuple[str, ...] = ()) -> str:

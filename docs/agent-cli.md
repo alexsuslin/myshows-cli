@@ -20,11 +20,25 @@ Treat the JSON payload as the source of truth. Use exit code `0` as success and 
 
 The CLI reads configuration from environment variables or a local `.env` file.
 
+Configuration sources are checked in this order:
+
+1. environment variables
+2. `./.env` in the current working directory
+3. `$XDG_CONFIG_HOME/myshows-cli/.env`
+4. `~/.config/myshows-cli/.env`
+
 Smallest practical `.env`:
 
 ```dotenv
 email=your-login-or-email
 password=your-password
+```
+
+Explicit CLI aliases are also supported:
+
+```dotenv
+MYSHOWS_CLI_EMAIL=your-login-or-email
+MYSHOWS_CLI_PASSWORD=your-password
 ```
 
 Optional explicit OAuth app credentials:
