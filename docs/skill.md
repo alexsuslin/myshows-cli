@@ -1,6 +1,6 @@
 # Agent Skill Notes
 
-Use [docs/agent-cli.md](/C:/Users/asuslin/Documents/Life/docs/agent-cli.md) as the canonical guide for agent usage.
+Use [docs/agent-cli.md](agent-cli.md) as the canonical guide for agent usage.
 
 This file stays as a short pointer for skill-level discovery:
 

@@ -1,5 +1,10 @@
 # myshows-agent-cli
 
+[![CI](https://github.com/alexsuslin/myshows-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/alexsuslin/myshows-cli/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/alexsuslin/myshows-cli)](https://github.com/alexsuslin/myshows-cli/releases)
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://github.com/alexsuslin/myshows-cli)
+[![License](https://img.shields.io/github/license/alexsuslin/myshows-cli)](LICENSE)
+
 Minimal Python CLI wrapper around the official MyShows API for agent workflows.
 
 The project is intentionally small. The first release focuses on four stable commands that are cheap for an agent to call and cheap to parse:
@@ -14,8 +19,8 @@ The project is intentionally small. The first release focuses on four stable com
 
 The main use case is a remote agent such as Hermes or OpenClaw running on Ubuntu on a VPS. Instead of giving the agent a lot of MyShows API context, we give it one short CLI with predictable JSON output.
 
-Project guidance for maintainers lives in [AGENTS.md](/C:/Users/asuslin/Documents/Life/AGENTS.md).
-Canonical agent usage documentation lives in [docs/agent-cli.md](/C:/Users/asuslin/Documents/Life/docs/agent-cli.md).
+Project guidance for maintainers lives in [AGENTS.md](AGENTS.md).
+Canonical agent usage documentation lives in [docs/agent-cli.md](docs/agent-cli.md).
 
 ## Current commands
 
