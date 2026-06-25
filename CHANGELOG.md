@@ -4,6 +4,15 @@ All notable changes to this project should be documented in this file.
 
 ## Unreleased
 
+## v0.2.0 - 2026-06-25
+
+Title-based episode marking release for agent workflows.
+
+### Added
+
+- Added `mark-title` to mark a watched episode by title or title context instead of requiring an `sXXeYY` code.
+- Added safe ambiguous episode handling with JSON `candidates` so agents can ask for clarification instead of guessing.
+
 ## v0.1.1 - 2026-06-18
 
 Configuration quality-of-life release for agent and VPS usage.

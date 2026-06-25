@@ -9,7 +9,7 @@ from typing import Any
 
 from myshows_cli.client import MyShowsClient
 from myshows_cli.config import ConfigurationError, Settings
-from myshows_cli.service import MyShowsService, MyShowsServiceError
+from myshows_cli.service import AmbiguousEpisodeTitleError, MyShowsService, MyShowsServiceError
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -29,6 +29,12 @@ def build_parser() -> argparse.ArgumentParser:
     mark.add_argument("episode_code")
     mark.add_argument("--rating", type=int, choices=range(0, 6))
     mark.add_argument("--json", action="store_true", dest="as_json")
+
+    mark_title = subparsers.add_parser("mark-title", help="Mark an episode as watched by title.")
+    mark_title.add_argument("show_name")
+    mark_title.add_argument("episode_title")
+    mark_title.add_argument("--rating", type=int, choices=range(0, 6))
+    mark_title.add_argument("--json", action="store_true", dest="as_json")
 
     watching = subparsers.add_parser("watching", help="List currently watched shows.")
     watching.add_argument("--sort", choices=("popularity", "title"), default="popularity")
@@ -57,6 +63,9 @@ def run(argv: list[str] | None = None, *, service: MyShowsService | None = None)
         if args.command == "mark":
             data = active_service.mark_episode(args.show_name, args.episode_code, rating=args.rating)
             return _emit_result(data, as_json, _format_mark(data))
+        if args.command == "mark-title":
+            data = active_service.mark_episode_by_title(args.show_name, args.episode_title, rating=args.rating)
+            return _emit_result(data, as_json, _format_mark(data))
         if args.command == "watching":
             data = active_service.list_watching(sort_by=args.sort)
             return _emit_result(data, as_json, _format_watching(data))
@@ -64,6 +73,8 @@ def run(argv: list[str] | None = None, *, service: MyShowsService | None = None)
             data = active_service.remaining(args.show_name)
             return _emit_result(data, as_json, _format_remaining(data))
         parser.error(f"Unsupported command: {args.command}")
+    except AmbiguousEpisodeTitleError as error:
+        return _emit_error(str(error), as_json, candidates=error.candidates)
     except (ConfigurationError, MyShowsServiceError) as error:
         return _emit_error(str(error), as_json)
     except Exception as error:  # pragma: no cover - safety net for agent usage
@@ -84,9 +95,11 @@ def _emit_result(data: Any, as_json: bool, text: str) -> int:
     return 0
 
 
-def _emit_error(message: str, as_json: bool) -> int:
+def _emit_error(message: str, as_json: bool, **extra: Any) -> int:
     if as_json:
-        print(json.dumps({"ok": False, "error": message}, ensure_ascii=False))
+        payload = {"ok": False, "error": message}
+        payload.update(extra)
+        print(json.dumps(payload, ensure_ascii=False))
     else:
         print(message, file=sys.stderr)
     return 1

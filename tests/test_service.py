@@ -1,4 +1,9 @@
-from myshows_cli.service import EpisodeNotFoundError, MyShowsService, ShowNotFoundError
+from myshows_cli.service import (
+    AmbiguousEpisodeTitleError,
+    EpisodeNotFoundError,
+    MyShowsService,
+    ShowNotFoundError,
+)
 
 
 class StubClient:
@@ -38,6 +43,9 @@ def make_service():
                 ],
                 "Friends": [
                     {"id": 303, "title": "Друзья", "titleOriginal": "Friends", "watching": 9000},
+                ],
+                "Alexander Panchin": [
+                    {"id": 505, "title": "Alexander Panchin", "titleOriginal": "Alexander Panchin", "watching": 100},
                 ],
                 "x filez": [
                     {"id": 404, "title": "Секретные материалы", "titleOriginal": "The X-Files", "watching": 11000},
@@ -90,12 +98,36 @@ def make_service():
                         {"id": 4001, "seasonNumber": 1, "episodeNumber": 1, "shortName": "s01e01", "title": "Pilot", "isSpecial": 0},
                     ],
                 },
+                505: {
+                    "id": 505,
+                    "title": "Alexander Panchin",
+                    "titleOriginal": "Alexander Panchin",
+                    "episodes": [
+                        {
+                            "id": 5001,
+                            "seasonNumber": 3,
+                            "episodeNumber": 1,
+                            "shortName": "s03e01",
+                            "title": "Alexander Panchin - Time-travelling porn and other signs of the reproducibility apocalypse",
+                            "isSpecial": 0,
+                        },
+                        {
+                            "id": 5002,
+                            "seasonNumber": 3,
+                            "episodeNumber": 2,
+                            "shortName": "s03e02",
+                            "title": "Alexander Panchin - The reproducibility debate",
+                            "isSpecial": 0,
+                        },
+                    ],
+                },
             },
             watched_map={
                 101: [{"id": 1001, "rating": 0}, {"id": 1002, "rating": 4}],
                 202: [],
                 303: [{"id": 3001, "rating": 0}],
                 404: [],
+                505: [],
                 "profile_shows": [
                     {
                         "show": {"id": 1, "title": "Loki", "titleOriginal": "Loki", "watching": 9500},
@@ -148,6 +180,46 @@ def test_mark_episode_checks_target_episode_with_rating():
         {"id": 2014, "rating": 4},
         True,
     )
+
+
+def test_mark_episode_by_title_checks_direct_title_match_with_rating():
+    service = make_service()
+
+    result = service.mark_episode_by_title("Alexander Panchin", "Time-travelling porn", rating=5)
+
+    assert result["episode"]["code"] == "s03e01"
+    assert result["rating"] == 5
+    assert service.client.calls[-2] == (
+        "manage.SetShowStatus",
+        {"id": 505, "status": "watching"},
+        True,
+    )
+    assert service.client.calls[-1] == (
+        "manage.CheckEpisode",
+        {"id": 5001, "rating": 5},
+        True,
+    )
+
+
+def test_mark_episode_by_title_matches_cyrillic_title_context():
+    service = make_service()
+
+    result = service.mark_episode_by_title("Alexander Panchin", "Научное порноведение")
+
+    assert result["episode"]["code"] == "s03e01"
+    assert result["checked"] is True
+
+
+def test_mark_episode_by_title_rejects_ambiguous_matches_with_candidates():
+    service = make_service()
+
+    try:
+        service.mark_episode_by_title("Alexander Panchin", "reproducibility")
+    except AmbiguousEpisodeTitleError as error:
+        assert "Ambiguous episode title" in str(error)
+        assert [candidate["code"] for candidate in error.candidates] == ["s03e01", "s03e02"]
+    else:
+        raise AssertionError("Expected AmbiguousEpisodeTitleError")
 
 
 def test_mark_episode_raises_for_missing_episode():
