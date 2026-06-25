@@ -7,11 +7,12 @@
 
 Minimal Python CLI wrapper around the official MyShows API for agent workflows.
 
-The project is intentionally small. The first release focuses on four stable commands that are cheap for an agent to call and cheap to parse:
+The project is intentionally small. The CLI focuses on stable commands that are cheap for an agent to call and cheap to parse:
 
 - `start`
 - `progress`
 - `mark`
+- `mark-title`
 - `watching`
 - `remaining`
 
@@ -30,6 +31,7 @@ Project release history lives in [CHANGELOG.md](CHANGELOG.md).
 myshows start "X-Files" --json
 myshows progress "South Park" --json
 myshows mark "Wild Wild West" s02e14 --rating 4 --json
+myshows mark-title "Alexander Panchin" "Time-travelling porn" --json
 myshows watching --sort popularity --json
 myshows remaining "Friends" --json
 ```
@@ -100,15 +102,16 @@ python -m ruff check .
 python -m build
 ```
 
-## TDD scope for v0
+## Test coverage
 
-The initial tests cover:
+The tests cover:
 
 - starting a show as `watching`
 - fuzzy show-name resolution for small typos
 - rejecting weak matches with a `show not found` error
 - finding progress for a show
 - marking a specific episode as watched
+- marking an episode by title while rejecting ambiguous matches
 - listing currently watched shows sorted by popularity
 - counting remaining episodes while ignoring specials
 - CLI JSON output for each command

@@ -166,6 +166,73 @@ Expected success shape:
 }
 ```
 
+### `mark-title`
+
+Use when the agent knows a show name and episode title or title context, but does not know the `sXXeYY` episode code.
+
+```bash
+myshows mark-title "Alexander Panchin" "Time-travelling porn" --json
+myshows mark-title "Alexander Panchin" "Научное порноведение" --json
+```
+
+Behavior notes:
+
+- title matching uses regular episodes only
+- direct title fragments are preferred
+- Cyrillic title context can match transliterated English title tokens when there is one clear match
+- if multiple episodes match equally, the CLI returns `ok: false` with `candidates` instead of guessing
+- the CLI attempts to set the show status to `watching`
+- MyShows may reflect writes with a short delay on immediate follow-up reads
+
+Expected success shape:
+
+```json
+{
+  "ok": true,
+  "data": {
+    "show": {
+      "id": 80423,
+      "title": "Alexander Panchin",
+      "title_original": "Alexander Panchin",
+      "popularity": 100
+    },
+    "episode": {
+      "id": 18154292,
+      "title": "Alexander Panchin - Time-travelling porn and other signs of the reproducibility apocalypse",
+      "season": 3,
+      "episode": 1,
+      "code": "s03e01"
+    },
+    "rating": null,
+    "checked": true
+  }
+}
+```
+
+Expected ambiguous-match shape:
+
+```json
+{
+  "ok": false,
+  "error": "Ambiguous episode title: reproducibility",
+  "candidates": [
+    {
+      "id": 18154292,
+      "title": "Alexander Panchin - Time-travelling porn and other signs of the reproducibility apocalypse",
+      "season": 3,
+      "episode": 1,
+      "code": "s03e01"
+    },
+    {
+      "id": 18154293,
+      "title": "Alexander Panchin - The reproducibility debate",
+      "season": 3,
+      "episode": 2,
+      "code": "s03e02"
+    }
+  ]
+}
+```
 ### `watching`
 
 Use when the agent needs the shows currently being watched.
@@ -253,7 +320,7 @@ Example for a weak or missing show match:
 - Prefer exact show names when available.
 - Small typos are usually fine, but the CLI may reject very weak matches on purpose.
 - Prefer `--json` in every automated call.
-- After `mark`, tolerate a short delay before assuming a read mismatch is a bug.
+- After `mark` or `mark-title`, tolerate a short delay before assuming a read mismatch is a bug.
 - Do not scrape MyShows HTML if the CLI can answer the question.
 - If a needed operation does not exist yet, add it to the CLI instead of teaching the agent raw API calls.
 
