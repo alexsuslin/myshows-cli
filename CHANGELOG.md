@@ -4,6 +4,10 @@ All notable changes to this project should be documented in this file.
 
 ## Unreleased
 
+### Fixed
+
+- Tightened `mark-title` fuzzy matching so long title queries with weak token overlap return `ok: false` instead of marking an unrelated episode.
+
 ## v0.2.0 - 2026-06-25
 
 Title-based episode marking release for agent workflows.
