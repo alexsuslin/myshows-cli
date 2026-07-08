@@ -47,6 +47,9 @@ def make_service():
                 "Alexander Panchin": [
                     {"id": 505, "title": "Alexander Panchin", "titleOriginal": "Alexander Panchin", "watching": 100},
                 ],
+                "Vert Dider": [
+                    {"id": 606, "title": "Vert Dider", "titleOriginal": "Vert Dider", "watching": 68},
+                ],
                 "x filez": [
                     {"id": 404, "title": "Секретные материалы", "titleOriginal": "The X-Files", "watching": 11000},
                 ],
@@ -121,6 +124,21 @@ def make_service():
                         },
                     ],
                 },
+                606: {
+                    "id": 606,
+                    "title": "Vert Dider",
+                    "titleOriginal": "Vert Dider",
+                    "episodes": [
+                        {
+                            "id": 6001,
+                            "seasonNumber": 10,
+                            "episodeNumber": 4,
+                            "shortName": "s10e04",
+                            "title": "Самое дождливое место на планете [Veritasium]",
+                            "isSpecial": 0,
+                        },
+                    ],
+                },
             },
             watched_map={
                 101: [{"id": 1001, "rating": 0}, {"id": 1002, "rating": 4}],
@@ -128,6 +146,7 @@ def make_service():
                 303: [{"id": 3001, "rating": 0}],
                 404: [],
                 505: [],
+                606: [],
                 "profile_shows": [
                     {
                         "show": {"id": 1, "title": "Loki", "titleOriginal": "Loki", "watching": 9500},
@@ -208,6 +227,21 @@ def test_mark_episode_by_title_matches_cyrillic_title_context():
 
     assert result["episode"]["code"] == "s03e01"
     assert result["checked"] is True
+
+
+def test_mark_episode_by_title_rejects_weak_shared_tokens():
+    service = make_service()
+
+    try:
+        service.mark_episode_by_title(
+            "Vert Dider",
+            "Самое опасное когнитивное искажение Veritasium",
+            rating=5,
+        )
+    except EpisodeNotFoundError as error:
+        assert "Самое опасное когнитивное искажение Veritasium" in str(error)
+    else:
+        raise AssertionError("Expected EpisodeNotFoundError")
 
 
 def test_mark_episode_by_title_rejects_ambiguous_matches_with_candidates():

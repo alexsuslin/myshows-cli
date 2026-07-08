@@ -179,6 +179,7 @@ Behavior notes:
 
 - title matching uses regular episodes only
 - direct title fragments are preferred
+- long fuzzy title queries must match most distinctive query tokens; weak overlaps return `ok: false`
 - Cyrillic title context can match transliterated English title tokens when there is one clear match
 - if multiple episodes match equally, the CLI returns `ok: false` with `candidates` instead of guessing
 - the CLI attempts to set the show status to `watching`

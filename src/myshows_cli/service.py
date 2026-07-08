@@ -305,6 +305,10 @@ class MyShowsService:
             token_scores.append(
                 max(self._episode_title_token_score(query_token, title_token) for title_token in title_tokens)
             )
+        if len(query_tokens) >= 4:
+            matched_tokens = sum(1 for score in token_scores if score > 0)
+            if matched_tokens / len(query_tokens) < 0.6:
+                return 0.0
         return sum(token_scores) / len(token_scores)
 
     @staticmethod

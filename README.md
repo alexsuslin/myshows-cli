@@ -111,7 +111,7 @@ The tests cover:
 - rejecting weak matches with a `show not found` error
 - finding progress for a show
 - marking a specific episode as watched
-- marking an episode by title while rejecting ambiguous matches
+- marking an episode by title while rejecting ambiguous or weak matches
 - listing currently watched shows sorted by popularity
 - counting remaining episodes while ignoring specials
 - CLI JSON output for each command
